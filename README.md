@@ -5,7 +5,7 @@ API accepts signups → Kafka → Worker persists to Postgres.
 
 ## Prerequisites
 
-- Fresh Ubuntu droplet (DigitalOcean or similar)
+- Fresh Ubuntu (min 2GB RAM) droplet (DigitalOcean or similar)
 - Non-root user with sudo:
 ```bash
 adduser --disabled-password --gecos "" worker
@@ -17,7 +17,11 @@ su - worker
 ## 1. Bootstrap
 
 ```bash
-chmod +x bootstrap.sh && ./bootstrap.sh
+mkdir code && cd code
+git clone https://github.com/echernenko/signup-lab-k3s.git
+cd signup-lab-k3s
+chmod +x bootstrap.sh deploy.sh
+./bootstrap.sh
 ```
 
 What it does:
@@ -26,16 +30,13 @@ What it does:
 3. Installs k3s via the official install script (skips if already present)
 4. Prints Docker version and k3s node status to confirm both are ready
 
-**Important:** after the first run you must re-login so the docker group takes effect:
-```bash
-exit
-su - worker
-```
-
 ## 2. Deploy
 
 ```bash
-chmod +x deploy.sh && ./deploy.sh
+exit          # refresh docker group membership
+su - worker
+cd code/signup-lab-k3s
+./deploy.sh
 ```
 
 What it does:
